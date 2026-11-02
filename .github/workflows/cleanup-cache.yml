@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Reproduce expression-to-shell dataflow
         run: |
+          echo "Source workflow run: $SOURCE_WORKFLOW_RUN_ID"
+          echo "Source head repository: $SOURCE_HEAD_REPOSITORY"
           BRANCH="${{ github.event.workflow_run.head_branch }}"
           echo "Deleting caches for ref: $BRANCH"
           gh cache list --ref "$BRANCH" --limit 100 --json id --jq '.[].id' 2>/dev/null \
@@ -24,3 +26,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          SOURCE_WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+          SOURCE_HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
